@@ -3,23 +3,20 @@ const SECRET_TOKEN = 'public1';    // نفس التوكن اللي حطيت في
 
 async function sendData(ev) {
   ev.preventDefault();
-  const payload = {
-    name: document.getElementById('name').value,
-    email: document.getElementById('email').value,
-    message: document.getElementById('message').value,
-    token: SECRET_TOKEN,
-    source: 'github_pages'
-  };
+
+  const formData = new FormData();
+  formData.append("name", document.getElementById('name').value);
+  formData.append("email", document.getElementById('email').value);
+  formData.append("message", document.getElementById('message').value);
+  formData.append("token", SECRET_TOKEN);
+  formData.append("source", "github_pages");
 
   try {
     const res = await fetch(WEB_APP_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-      // إذا واجهت مشاكل CORS: جرب بدون headers (أو استخدم proxy). 
+      method: "POST",
+      body: formData
     });
 
-    // حاول قراءة JSON
     const data = await res.json();
     document.getElementById('status').innerText = JSON.stringify(data);
   } catch (err) {
